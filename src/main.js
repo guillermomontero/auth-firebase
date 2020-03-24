@@ -1,4 +1,10 @@
 import Vue from 'vue'
+import { BootstrapVue } from 'bootstrap-vue'
+// Install BootstrapVue
+Vue.use(BootstrapVue)
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -8,7 +14,7 @@ const firebase = require('firebase/app')
 // Add additional services that you want to use
 require('firebase/auth');
 // require('firebase/database');
-// require('firebase/firestore');
+require('firebase/firestore');
 // require('firebase/messaging');
 // require('firebase/functions');
 
@@ -21,8 +27,11 @@ const firebaseConfig = {
   messagingSenderId: "1060141473854",
   appId: "1:1060141473854:web:dfa1e5cf51e8d57390316f"
 };
+
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+firebaseApp.firestore()
+export default firebaseApp.firestore()
 
 Vue.config.productionTip = false
 

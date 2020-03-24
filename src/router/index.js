@@ -20,6 +20,18 @@ const routes = [
     path: '/ingreso',
     name: 'ingreso',
     component: () => import(/* webpackChunkName: "ingreso" */ '../views/Ingreso.vue')
+  },
+  {
+    path: '/agregar',
+    name: 'agregar',
+    component: () => import(/* webpackChunkName: "agregar" */ '../views/Agregar.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/editar/:id',
+    name: 'editar',
+    component: () => import(/* webpackChunkName: "editar" */ '../views/Editar.vue'),
+    meta: { requiresAuth: true }
   }
   
 ]
