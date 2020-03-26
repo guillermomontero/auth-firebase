@@ -10,7 +10,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    usuario : null,
+    usuario : '',
     error: '',
     tareas: [],
     tarea: {nombre: '', id: ''},
@@ -21,25 +21,20 @@ export default new Vuex.Store({
     setUsuario(state, payload) {
       state.usuario = payload
     },
-
     setError(state, payload) {
       state.error = payload
     },
-
     setTareas(state, tareas) {
       state.tareas = tareas;
     },
-
     setTarea(state, tarea) {
       state.tarea = tarea;
     },
-
     eliminarTarea(state, id) {
       state.tareas = state.tareas.filter((doc) => {
         return doc.id != id;
       })
     },
-
     cargarFirebase(state, payload) {
       state.carga = payload
     }

@@ -56,7 +56,9 @@ export default {
     ...mapActions(['getTareas', 'eliminarTarea', 'buscador'])
   },
   created() {
-    this.getTareas()
+    if(this.usuario !== null || this.usuario !== '' || this.usuario !== undefined) {
+      this.getTareas()
+    }
   }
 }
 </script>
