@@ -13,7 +13,9 @@ export default new Vuex.Store({
     usuario : null,
     error: '',
     tareas: [],
-    tarea: {nombre: '', id: ''}
+    tarea: {nombre: '', id: ''},
+    carga: false,
+    texto: ''
   },
   mutations: {
     setUsuario(state, payload) {
@@ -36,9 +38,16 @@ export default new Vuex.Store({
       state.tareas = state.tareas.filter((doc) => {
         return doc.id != id;
       })
+    },
+
+    cargarFirebase(state, payload) {
+      state.carga = payload
     }
   },
   actions: {
+    buscador({ commit, state }, payload) {
+      state.texto = payload.toLowerCase();
+    },
     crearUsuario({ commit }, payload) {
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.pass)
       .then((response) => {
@@ -51,9 +60,14 @@ export default new Vuex.Store({
           // LLevamos al usuario a la página de inicio
           router.push({ name: 'inicio' })
         })
+        .catch((resolve) => {
+          console.log(resolve)
+          commit('setError', resolve.code)
+        })
       })
       .catch((resolve) => {
-        commit('setError', resolve.message)
+        console.log(resolve)
+        commit('setError', resolve.code)
       })
     },
 
@@ -64,7 +78,8 @@ export default new Vuex.Store({
         router.push({ name: 'inicio' })
       })
       .catch((resolve) => {
-        commit('setError', resolve.message)
+        console.log(resolve)
+        commit('setError', resolve.code)
       })
     },
 
@@ -83,6 +98,7 @@ export default new Vuex.Store({
     },
 
     getTareas({ commit }) {
+      commit('cargarFirebase', true)
       const usuario = firebase.auth().currentUser;
       const tareas = [];
       db.collection(usuario.email).get()
@@ -92,6 +108,7 @@ export default new Vuex.Store({
           tarea.id = doc.id;
           tareas.push(tarea);
         })
+        commit('cargarFirebase', false)
       });
       commit('setTareas', tareas);
     },
@@ -117,11 +134,13 @@ export default new Vuex.Store({
     },
 
     agregarTarea({ commit }, nombre) {
+      commit('cargarFirebase', true)
       const usuario = firebase.auth().currentUser;
       db.collection(usuario.email).add({
         nombre: nombre
       })
       .then(() => {
+        commit('cargarFirebase', false)
         router.push({ name: 'inicio' })
       })
     },
@@ -141,6 +160,17 @@ export default new Vuex.Store({
       } else{
         return true
       }
+    },
+
+    arrayFiltrado(state) {
+      let arrFiltrado = [];
+      for (let tarea of state.tareas) {
+        let nombre = tarea.nombre.toLowerCase();
+        if (nombre.indexOf(state.texto) >= 0) {
+          arrFiltrado.push(tarea)
+        }
+      }
+      return arrFiltrado;
     }
   }
 })

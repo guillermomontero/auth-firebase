@@ -4,9 +4,19 @@
     <router-link :to="{ name: 'agregar' }">
       <button class="btn btn-success btn-block">Agregar</button>
     </router-link>
+
+    <form @submit.prevent="buscador(texto)">
+      <input type="text" placeholder="Buscar" class="form-control mt-5" v-model="texto" v-on:keyup="buscador(texto)">
+    </form>
+
+    <div v-if="carga" class="text-center mt-5">
+      <h3>Cargando contenido...</h3>
+      <pulse-loader :loading="carga"></pulse-loader>
+    </div>
+
     <ul class="list-group mt-5">
       <li
-        v-for="item of tareas"
+        v-for="item of arrayFiltrado"
         :key="item.id"
         class="list-group-item"
       >
@@ -25,14 +35,25 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex';
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
+
 export default {
   name: 'Inicio',
+  data() {
+    return {
+      texto: ''
+    }
+  },
+  components: {
+    PulseLoader
+  },
   computed: {
-    ...mapState(['usuario', 'tareas'])
+    ...mapState(['usuario', 'tareas', 'carga']),
+    ...mapGetters(['arrayFiltrado'])
   },
   methods: {
-    ...mapActions(['getTareas', 'eliminarTarea'])
+    ...mapActions(['getTareas', 'eliminarTarea', 'buscador'])
   },
   created() {
     this.getTareas()
