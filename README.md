@@ -1,5 +1,10 @@
 # auth-firebase
 
+## Descripción del proyecto
+```
+Login realizado con VUE, Vuelidate y Bootstrap con autenticación de Firebase
+```
+
 ## Project setup
 ```
 npm install
